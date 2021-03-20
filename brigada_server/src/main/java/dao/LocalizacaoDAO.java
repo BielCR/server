@@ -18,7 +18,7 @@ import java.sql.PreparedStatement;
 public class LocalizacaoDAO {
     public static void enviarLocalizacao (Localizacao l){
         
-        String sql = "INSERT INTO localizacao(latitude, longiude)  VALUES (?, ?);";
+        String sql = "INSERT INTO localizacao(latitude, longitude)  VALUES (?, ?);";
         
         try(Connection con = FabricaConexao.criaConexao()){
             PreparedStatement transacao = con.prepareStatement(sql);
@@ -28,7 +28,7 @@ public class LocalizacaoDAO {
             transacao.execute();
             
         }catch(SQLException ex){
-            System.err.println("Erro ao processar a SQL");
+            System.err.println("Erro ao processar a SQL : "+ex);
         }
     }
 }
