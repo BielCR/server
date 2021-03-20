@@ -1,5 +1,5 @@
 
-package model;
+package dao;
 
 //import de models e tools
 import model.Tela;
@@ -9,28 +9,38 @@ import tools.FabricaConexao;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import model.Tela;
 
 
 public class TelaDAO {
     
-    public static Object exibeTela(int id){
+    public static Tela exibeTela(int id){
         
-        String sql = "SELECT * FROM telas WHERE id = " + id + ";";
+        Tela temp = null;
+        String sql = "SELECT * FROM telas WHERE id = ?;";
+        
         try(Connection con = FabricaConexao.criaConexao()){
+        
             
             PreparedStatement transacao = con.prepareStatement(sql);
-            return transacao.execute();
+            transacao.setInt(1 ,id);
+            ResultSet tuplas = transacao.executeQuery();
+            
+            while(tuplas.next()){
+                temp = new Tela(tuplas.getInt("id"), tuplas.getString("corpo"),
+                tuplas.getString("imagem"), tuplas.getString("titulo"));
+            }
             
         }catch(SQLException ex){
             System.err.println("Erro na execução de exibição da tela");
         }
-        Object o = "";
-        return o;
+        return temp;
     }
     
     public static void cadastraTela(Tela novaTela){
         
-        String sql = "INSERT INTO telas(id, corpo, imagem, titulo, id_tab) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO telas(id, corpo, imagem, titulo) VALUES (?, ?, ?, ?)";
         try(Connection con = FabricaConexao.criaConexao()){
             
             PreparedStatement tran = con.prepareStatement(sql);
@@ -40,7 +50,6 @@ public class TelaDAO {
             tran.setString(2, novaTela.getCorpo());
             tran.setString(3, novaTela.getImagem());
             tran.setString(4, novaTela.getTitulo());
-            tran.setInt(5, novaTela.getId_tab());
             
             //execiutando a statment
             tran.execute();

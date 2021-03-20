@@ -4,9 +4,17 @@
         <servlet-name>TelasServlet</servlet-name>
         <servlet-class>controler.TelasServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LocalizacaoServlet</servlet-name>
+        <servlet-class>controler.LocalizacaoServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>TelasServlet</servlet-name>
         <url-pattern>/telas</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LocalizacaoServlet</servlet-name>
+        <url-pattern>/local</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

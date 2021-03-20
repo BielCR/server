@@ -1,53 +1,60 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package controler;
 
+import dao.LocalizacaoDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.Connection;
-import java.sql.SQLException;
-import model.Tela;
-import dao.TelaDAO;
-import tools.FabricaConexao;
+import model.Localizacao;
 import tools.Resposta;
 
 /**
  *
  * @author gabri
  */
+public class LocalizacaoServlet extends HttpServlet {
 
-public class TelasServlet extends HttpServlet {
-    
-    private void leitura(HttpServletRequest request, PrintWriter out){
-        String idStr = request.getParameter("id");
-        if(idStr != null){
-            try{
-                int id = Integer.parseInt(idStr);
-                Tela temp = TelaDAO.exibeTela(id);
-                out.println(new Resposta(200, temp));
-            }catch(NumberFormatException ex){
-                out.println(new Resposta(403, "Para exibir a leitura é necessári informar o id;"));
-            }
-        }else{
+    private void envio (HttpServletRequest request, PrintWriter out){
+        String latitudeTxt = request.getParameter("latitude");
+        String longitudeTxt = request.getParameter("longitude");
+        if(latitudeTxt == null || longitudeTxt == null){
             
+        }else{
+            try{
+                double latitude = Double.parseDouble(latitudeTxt);
+                double longitude = Double.parseDouble(longitudeTxt);
+                Localizacao novaLocalizacao = new Localizacao(latitude, longitude);
+                LocalizacaoDAO.enviarLocalizacao(novaLocalizacao);
+                //localizacao enviada com sucesso
+                out.println(new Resposta(200, "Envio realizado com sucesso: "+latitude + " / " + longitude));
+            }catch(NumberFormatException ex){
+                out.println(new Resposta(404, "Os valores têm que ser de tipo numerico"));
+            }
+            
+           
         }
     }
-
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try ( PrintWriter out = response.getWriter()) {
-            
-            String servico = request.getParameter("servico");
+          //enviar localizacao
+          String servico = request.getParameter("servico");
             if(servico == null){
                 //exibir uma mensagem especificando que o servico está nulo
                 out.println("serviço não foi especificado");
             }else{
                 switch (servico){
-                    case "leitura":{
-                        leitura(request, out);
+                    case "envio":{
+                        envio(request, out);
                     }break;
                     default :{
                         out.println("Serviço não disponível para o usuário");
