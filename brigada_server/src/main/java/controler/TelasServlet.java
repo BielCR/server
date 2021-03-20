@@ -1,6 +1,5 @@
 package controler;
 
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -9,41 +8,31 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
 import java.sql.SQLException;
+import model.Tela;
+import model.TelaDAO;
 import tools.FabricaConexao;
 
 /**
  *
  * @author gabri
  */
+
 public class TelasServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try ( PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet TelasServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>teste</h1>");
+            int id = Integer.parseInt(request.getParameter("id"));
+            String corpo = request.getParameter("corpo");
+            String titulo = request.getParameter("titulo");
+            String imagem = request.getParameter("imagem");
+            int id_tab = Integer.parseInt(request.getParameter("id_tab"));
+
+            Tela tela = new Tela(id, id_tab, corpo, imagem, titulo);
+            TelaDAO.cadastraTela(tela);
             
-            Connection conn = FabricaConexao.criaConexao();
-            try {
-                if(!conn.isClosed()){
-                    out.println("<h1>Conexão funcionando corretamente</h1>");
-                }else{
-                    out.println("<h1>Falha ao conectar</h1>");
-                }
-            } catch (SQLException ex) {
-               out.println("<h1>Erro de conexão</h1>");
-            }
-            
-            
-            out.println("</body>");
-            out.println("</html>");
+            out.println("Operação realizada com sucesso!");
         }
     }
 
