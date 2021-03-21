@@ -8,6 +8,9 @@ package controler;
 import dao.LocalizacaoDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,18 +25,28 @@ import tools.Resposta;
 public class LocalizacaoServlet extends HttpServlet {
 
     private void envio (HttpServletRequest request, PrintWriter out){
+        
+        //Recebendo os request
         String latitudeTxt = request.getParameter("latitude");
         String longitudeTxt = request.getParameter("longitude");
+        
+        //checando se os valores foram passados
         if(latitudeTxt == null || longitudeTxt == null){
             
         }else{
+            
+            //verificando se os valores passados são numéricos ou do tipo Date
             try{
+                //validando os atributos
+                Date agora =  new Date();
                 double latitude = Double.parseDouble(latitudeTxt);
                 double longitude = Double.parseDouble(longitudeTxt);
-                Localizacao novaLocalizacao = new Localizacao(latitude, longitude);
+                
+                //instanciando a localiza  
+                Localizacao novaLocalizacao = new Localizacao(latitude, longitude, agora);
                 LocalizacaoDAO.enviarLocalizacao(novaLocalizacao);
                 //localizacao enviada com sucesso
-                out.println(new Resposta(200, "Envio realizado com sucesso: "+latitude + " / " + longitude));
+                out.println(new Resposta(200, "Envio realizado com sucesso: "+latitude + " / " + longitude + ": "+ agora));
             }catch(NumberFormatException ex){
                 out.println(new Resposta(404, "Os valores têm que ser de tipo numerico"));
             }

@@ -5,16 +5,20 @@
  */
 package model;
 
+import java.util.Date;
+
 /**
  *
  * @author gabri
  */
 public class Localizacao {
     private double latitude, longitude;
+    private Date data;
 
-    public Localizacao(double latitude, double longitude) {
+    public Localizacao(double latitude, double longitude, Date data) {
         this.latitude = latitude;
         this.longitude = longitude;
+        this.data = data;
     }
 
     public double getLatitude() {
@@ -32,6 +36,15 @@ public class Localizacao {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
+
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
+    }
+    
     
      
 }

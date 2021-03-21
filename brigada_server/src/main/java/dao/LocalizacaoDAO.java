@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import tools.FabricaConexao;
 import java.sql.PreparedStatement;
+import java.sql.Timestamp;
 
 /**
  *
@@ -18,13 +19,14 @@ import java.sql.PreparedStatement;
 public class LocalizacaoDAO {
     public static void enviarLocalizacao (Localizacao l){
         
-        String sql = "INSERT INTO localizacao(latitude, longitude)  VALUES (?, ?);";
+        String sql = "INSERT INTO localizacao(latitude, longitude, dataHora)  VALUES (?, ?, ?);";
         
         try(Connection con = FabricaConexao.criaConexao()){
             PreparedStatement transacao = con.prepareStatement(sql);
             
             transacao.setDouble(1, l.getLatitude());
             transacao.setDouble(2, l.getLongitude());
+            transacao.setTimestamp(3, new Timestamp(l.getData().getTime()));
             transacao.execute();
             
         }catch(SQLException ex){
